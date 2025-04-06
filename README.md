@@ -263,6 +263,262 @@ Response:
 }
 ```
 
+### Video Feed
+
+#### Get Feed Videos
+```http
+GET /feed/videos
+```
+Query Parameters:
+- `page`: page number (default: 1)
+- `limit`: items per page (default: 10)
+- `category`: ["fitness", "nutrition", "wellness", "all"]
+
+Response:
+```json
+{
+  "videos": [
+    {
+      "id": "video123",
+      "title": "Morning Yoga Routine",
+      "description": "Start your day with this energizing yoga flow",
+      "thumbnailUrl": "https://example.com/thumbnails/yoga.jpg",
+      "videoUrl": "https://example.com/videos/yoga.mp4",
+      "duration": 1200,
+      "likes": 150,
+      "comments": 25,
+      "creator": {
+        "id": "creator123",
+        "name": "Yoga Master",
+        "profilePicture": "https://example.com/profiles/yoga_master.jpg"
+      },
+      "createdAt": "2024-03-31T10:00:00Z"
+    }
+  ],
+  "pagination": {
+    "currentPage": 1,
+    "totalPages": 10,
+    "totalItems": 100
+  }
+}
+```
+
+#### Schedule Video
+```http
+POST /feed/videos/schedule
+```
+Request Body:
+```json
+{
+  "title": "Evening Meditation",
+  "description": "Relaxing meditation for better sleep",
+  "videoFile": "base64encodedvideo",
+  "thumbnailFile": "base64encodedthumbnail",
+  "scheduledTime": "2024-04-01T20:00:00Z",
+  "category": "wellness",
+  "tags": ["meditation", "sleep", "relaxation"]
+}
+```
+
+### Notifications
+
+#### Send Notification
+```http
+POST /notifications
+```
+Request Body:
+```json
+{
+  "type": "emergency",
+  "title": "Emergency Alert",
+  "message": "Important health advisory in your area",
+  "priority": "high",
+  "targetUsers": ["user123", "user456"],
+  "scheduledTime": "2024-04-01T15:00:00Z",
+  "data": {
+    "alertType": "health_advisory",
+    "location": "New York",
+    "severity": "critical"
+  }
+}
+```
+
+#### Get User Notifications
+```http
+GET /notifications/user/{userId}
+```
+Query Parameters:
+- `page`: page number
+- `limit`: items per page
+- `read`: boolean (filter read/unread)
+- `type`: ["emergency", "offer", "reminder", "all"]
+
+Response:
+```json
+{
+  "notifications": [
+    {
+      "id": "notif123",
+      "type": "offer",
+      "title": "Special Discount",
+      "message": "20% off on all wellness products",
+      "read": false,
+      "createdAt": "2024-03-31T12:00:00Z",
+      "data": {
+        "offerCode": "WELLNESS20",
+        "validUntil": "2024-04-30T23:59:59Z"
+      }
+    }
+  ]
+}
+```
+
+### Health Camera
+
+#### Upload Health Scan
+```http
+POST /health/scan
+```
+Request Body (multipart/form-data):
+- `image`: scan image file
+- `type`: ["skin", "wound", "rash"]
+- `notes`: string
+- `location`: string (body part)
+
+Response:
+```json
+{
+  "id": "scan123",
+  "analysis": {
+    "condition": "mild_irritation",
+    "confidence": 0.85,
+    "recommendations": [
+      "Apply moisturizer",
+      "Avoid direct sunlight"
+    ]
+  },
+  "createdAt": "2024-03-31T14:30:00Z"
+}
+```
+
+### Quizzes
+
+#### Get Available Quizzes
+```http
+GET /quizzes
+```
+Query Parameters:
+- `category`: ["nutrition", "fitness", "mental_health"]
+- `difficulty`: ["easy", "medium", "hard"]
+
+Response:
+```json
+{
+  "quizzes": [
+    {
+      "id": "quiz123",
+      "title": "Nutrition Basics",
+      "description": "Test your knowledge about healthy eating",
+      "category": "nutrition",
+      "difficulty": "easy",
+      "questionsCount": 10,
+      "timeLimit": 600,
+      "createdAt": "2024-03-31T09:00:00Z"
+    }
+  ]
+}
+```
+
+#### Submit Quiz Answers
+```http
+POST /quizzes/{quizId}/submit
+```
+Request Body:
+```json
+{
+  "answers": [
+    {
+      "questionId": "q1",
+      "selectedOption": "A"
+    },
+    {
+      "questionId": "q2",
+      "selectedOption": "B"
+    }
+  ]
+}
+```
+
+Response:
+```json
+{
+  "score": 85,
+  "totalQuestions": 10,
+  "correctAnswers": 8,
+  "feedback": "Great job! You have a good understanding of nutrition basics.",
+  "detailedResults": [
+    {
+      "questionId": "q1",
+      "correct": true,
+      "explanation": "This is the correct answer because..."
+    }
+  ]
+}
+```
+
+### Examinations
+
+#### Schedule Examination
+```http
+POST /examinations
+```
+Request Body:
+```json
+{
+  "type": "annual_checkup",
+  "date": "2024-04-15",
+  "time": "10:00",
+  "doctorId": "doc123",
+  "notes": "Annual physical examination",
+  "requiredTests": ["blood_pressure", "cholesterol", "blood_sugar"]
+}
+```
+
+#### Get Examination Results
+```http
+GET /examinations/{examinationId}/results
+```
+Response:
+```json
+{
+  "id": "exam123",
+  "type": "annual_checkup",
+  "date": "2024-04-15",
+  "results": {
+    "blood_pressure": {
+      "systolic": 120,
+      "diastolic": 80,
+      "status": "normal"
+    },
+    "cholesterol": {
+      "total": 180,
+      "hdl": 60,
+      "ldl": 100,
+      "status": "healthy"
+    },
+    "blood_sugar": {
+      "fasting": 95,
+      "status": "normal"
+    }
+  },
+  "doctorNotes": "Patient is in good health. Continue current lifestyle.",
+  "recommendations": [
+    "Maintain current diet",
+    "Continue regular exercise"
+  ]
+}
+```
+
 ## Error Responses
 
 All API endpoints may return the following error responses:
